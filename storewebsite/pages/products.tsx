@@ -35,8 +35,11 @@ function Products(){
                         <text>정보 : {product.description}</text><br/>
                         <text>가격 : {product.price} 달러</text><br/>
                         <ProductImage src={product.image} />
-                        <Link href="/product">
-                            상품 자세히 보기
+                        <Link href={{
+                            pathname:`/product/${product.id}`,
+                            query:{price:JSON.stringify(product.price)}
+                        }}>
+                            상품 구매하러 가기
                         </Link>
                     </Product>
                 ))}

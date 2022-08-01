@@ -8,7 +8,7 @@ import styled from 'styled-components';
 const Home: NextPage = () => {
 
   return (
-    <>
+    <Container>
       <Header>
         TASINSA
       </Header>
@@ -22,9 +22,12 @@ const Home: NextPage = () => {
         <text>회사 소개 | 이용약관 | 개인정보취급방침 | 계정 신청 | Google Play | App Store</text>
       </Footer>
       
-    </>
+    </Container>
   )
 }
+const Container = styled.div`
+  background-color: #efefef;
+`;
 const Header = styled.div`
   font-size:1.0em;
   display:flex;
