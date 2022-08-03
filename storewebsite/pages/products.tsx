@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import Link from "next/link";
 import styled from 'styled-components';
+import {useQuery} from '@tanstack/react-query';
 
 interface IRate{
     rate:number;
@@ -17,19 +18,36 @@ interface IProducts{
     rating:IRate;
 }
 
+const getProducts = async ():Promise<IProducts[]|string> =>{
+    try{
+        const res = await fetch('https://fakestoreapi.com/products');
+        const data = await res.json();
+        return data;
+    }catch(error){
+        let message;
+        if(error instanceof Error){
+            message = error.message;
+        }else message = String(error);
+        return message;
+    }
+}
+
 function Products(){
     const [products,setProducts] = useState<IProducts[]>([]);
-    useEffect(()=>{
-        (async ()=>{
-            const productData = await(await fetch('https://fakestoreapi.com/products')).json();
-            setProducts(productData);
-            console.log(productData);
-        })();
-    },[]);
+    
+    const useProducts = useQuery(['products'],getProducts);
+    console.log(useProducts.data);
+    if(useProducts.isLoading){
+        return <div>loading...</div>;
+    }
+
+    if(useProducts.isError){
+        return <div>An error occured</div>;
+    }
     return (
         <div>
             <ProductList>
-                {products.map(product=>(
+                {typeof useProducts.data!='string' && useProducts.data.map(product=>(
                     <Product key={product.id}>
                         <text>Category : {product.category}</text><br/>
                         <text>정보 : {product.description}</text><br/>
