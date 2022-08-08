@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import styled from 'styled-components';
 import {useQuery} from '@tanstack/react-query';
+import Navbar from "../components/navbar";
 
 interface IRate{
     rate:number;
@@ -36,16 +37,18 @@ function Products(){
     const [products,setProducts] = useState<IProducts[]>([]);
     
     const useProducts = useQuery(['products'],getProducts);
-    console.log(useProducts.data);
     if(useProducts.isLoading){
-        return <div>loading...</div>;
+        return <div style={{fontSize:"30px"}}>loading...</div>;
     }
 
     if(useProducts.isError){
-        return <div>An error occured</div>;
+        return <div style={{fontSize:"30px"}}>An error occured</div>;
     }
     return (
         <div>
+            <Header>
+                <Navbar />
+            </Header>
             <ProductList>
                 {typeof useProducts.data!='string' && useProducts.data.map(product=>(
                     <Product key={product.id}>
@@ -54,10 +57,9 @@ function Products(){
                         <text>가격 : {product.price} 달러</text><br/>
                         <ProductImage src={product.image} />
                         <Link href={{
-                            pathname:`/product/${product.id}`,
-                            query:{price:JSON.stringify(product.price)}
+                            pathname:`/product/${product.id}`
                         }}>
-                            상품 구매하러 가기
+                            <CartButton>상품 구매하러 가기</CartButton>
                         </Link>
                     </Product>
                 ))}
@@ -67,13 +69,25 @@ function Products(){
 }
 export default Products;
 
-const ProductList = styled.ul``;
+const Header = styled.div`
+    width:100%;
+    align-items: center;
+    justify-content: center;
+    text{
+        font-size: 40px;
+        text-align: center;
+    }
+`;
+const ProductList = styled.ul`
+`;
 const Product = styled.div`
     background-color: white;
     margin-bottom:10px;
     padding:20px;
+    margin:13px;
     border-radius:15px;
     justify-content: center;
+    border:1px solid black;
     a{
         transition:color 0.2s ease-in-out;
         display:flex;
@@ -86,11 +100,22 @@ const Product = styled.div`
         }
     }
     text{
-        font-size:12px;
+        font-size:18px;
     }
 `;
 const ProductImage = styled.img`
     width:100px;
     height:100px;
     margin-right:10px;
+`
+const CartButton = styled.button`
+    height: 40px;
+    background-color: aliceblue;
+    border:1px solid black;
+    border-radius:10px;
+    margin:10px;
+    &:hover{
+        cursor: pointer;
+        background-color: antiquewhite;
+    }
 `
