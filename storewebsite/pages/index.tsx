@@ -1,33 +1,10 @@
 import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import Link from 'next/link';
 import styled from 'styled-components';
-import { Fragment } from 'react';
+import Layout from '../components/Layout';
 
-const Home: NextPage = () => {
-
-  return (
-    <Container>
-      <Header>
-        TAESINSA
-      </Header>
-      <Body>
-        <Link href="/products">
-          <Start>TAESINSA</Start>
-        </Link>
-        <Description>버튼을 눌러 쇼핑을 시작하세요!</Description>
-      </Body>
-      <Footer>
-        <text>회사 소개 | 이용약관 | 개인정보취급방침 | 계정 신청 | Google Play | App Store</text>
-      </Footer>
-    </Container>
-  )
-}
 const Container = styled.div`
   background-color: #efefef;
-  height:100%;
 `;
 const Header = styled.div`
   font-size:1.0em;
@@ -40,9 +17,6 @@ const Header = styled.div`
   border-bottom:1px solid black;
   height:10%;
 `;
-const Img = styled.img`
-
-`
 const Body = styled.body`
   display:flex;
   justify-content: center;
@@ -50,7 +24,6 @@ const Body = styled.body`
   margin:10px;
   border-bottom:1px solid black;
   flex-direction: column;
-  height: 80%;
 `
 const Start = styled.button`
   font-size:2.0em;
@@ -75,10 +48,29 @@ const Footer = styled.div`
   justify-content: center;
   align-items: center;
   margin:0 auto;
-  height: 10%;
   text-align:center;
   text{
     font-size:18px;
   }
 `;
+const Home: NextPage = () => {
+
+  return (
+    <Container>
+      <Header>
+        TAESINSA
+      </Header>
+      <Body>
+        <Link href="/products">
+          <Start>TAESINSA</Start>
+        </Link>
+        <Description>버튼을 눌러 쇼핑을 시작하세요!</Description>
+      </Body>
+      <Footer>
+        <text>회사 소개 | 이용약관 | 개인정보취급방침 | 계정 신청 | Google Play | App Store</text>
+      </Footer>
+    </Container>
+  )
+}
+
 export default Home

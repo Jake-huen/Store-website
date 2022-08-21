@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import Link from "next/link";
 import styled from 'styled-components';
 import {useQuery} from '@tanstack/react-query';
 import Navbar from "../components/navbar";
+import {fetchAllCategories, fetchProducts} from './api/api';
 
 interface IRate{
     rate:number;
@@ -18,57 +18,6 @@ interface IProducts{
     category:string;
     rating:IRate;
 }
-
-const getProducts = async ():Promise<IProducts[]|string> =>{
-    try{
-        const res = await fetch('https://fakestoreapi.com/products');
-        const data = await res.json();
-        return data;
-    }catch(error){
-        let message;
-        if(error instanceof Error){
-            message = error.message;
-        }else message = String(error);
-        return message;
-    }
-}
-
-function Products(){
-    const [products,setProducts] = useState<IProducts[]>([]);
-    
-    const useProducts = useQuery(['products'],getProducts);
-    if(useProducts.isLoading){
-        return <div style={{fontSize:"30px"}}>loading...</div>;
-    }
-
-    if(useProducts.isError){
-        return <div style={{fontSize:"30px"}}>An error occured</div>;
-    }
-    return (
-        <div>
-            <Header>
-                <Navbar />
-            </Header>
-            <ProductList>
-                {typeof useProducts.data!='string' && useProducts.data.map(product=>(
-                    <Product key={product.id}>
-                        <text>Category : {product.category}</text><br/>
-                        <text>정보 : {product.description}</text><br/>
-                        <text>가격 : {product.price} 달러</text><br/>
-                        <ProductImage src={product.image} />
-                        <Link href={{
-                            pathname:`/product/${product.id}`
-                        }}>
-                            <CartButton>상품 구매하러 가기</CartButton>
-                        </Link>
-                    </Product>
-                ))}
-            </ProductList>
-        </div>
-    );
-}
-export default Products;
-
 const Header = styled.div`
     width:100%;
     align-items: center;
@@ -77,6 +26,21 @@ const Header = styled.div`
         font-size: 40px;
         text-align: center;
     }
+`;
+const CategoryList = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin:10px;
+`;
+const Category = styled.button`
+    border:1px solid black;
+    border-radius: 10px;
+    margin-left: 10px;
+    padding:10px;
+    &:hover{
+        background-color: aliceblue;
+    }
+    cursor: pointer;
 `;
 const ProductList = styled.ul`
 `;
@@ -119,3 +83,47 @@ const CartButton = styled.button`
         background-color: antiquewhite;
     }
 `
+
+function Products(){
+    const {isLoading:productloading,data:productdata,isError:productError} = useQuery<IProducts[]>(['products'],fetchProducts);
+    const {isLoading:categoryloading,data:categorydata,isError:categoryError} = useQuery(['category'],fetchAllCategories);
+    const loading = productloading||categoryloading;
+    const error = productError||categoryError;
+    const [buttonClicked,setButtonClicked] = useState('');
+    const clickCategory = (index:any) =>{
+        setButtonClicked(categorydata[index]);
+    }
+    if(loading){
+        return <div style={{fontSize:"30px"}}>loading...</div>;
+    }
+    if(error){
+        return <div style={{fontSize:"30px"}}>An error occured</div>;
+    }
+    return (
+        <div>
+            <CategoryList>
+                {Object.keys(categorydata).map(index=>(
+                    <Category onClick={()=>clickCategory(index)}>{categorydata[index]}</Category>
+                    ))}
+            </CategoryList>
+            <ProductList>
+                {typeof productdata!='string' && productdata?.filter(product=>product.category===buttonClicked)
+                .map(product=>(
+                    <Product key={product.id}>
+                        <text>{product.category}</text><br />
+                        <text>정보 : {product.description}</text><br/>
+                        <text>가격 : {product.price} 달러</text><br/>
+                        <ProductImage src={product.image} />
+                        <Link href={{
+                            pathname:`/product/${product.id}`
+                        }}>
+                            <CartButton>상품 구매하러 가기</CartButton>
+                        </Link>
+                    </Product>
+                ))}
+            </ProductList>
+        </div>
+    );
+}
+export default Products;
+

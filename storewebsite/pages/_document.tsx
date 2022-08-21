@@ -6,9 +6,8 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <link
-            href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css"
+            href="https://fonts.googleapis.com/css?family=Lato|Oxanium|Roboto&display=swap"
             rel="stylesheet"
-            type="text/css"
           />
         </Head>
         <body>
@@ -21,4 +20,3 @@ class MyDocument extends Document {
 }
 
 export default MyDocument;
-

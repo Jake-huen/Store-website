@@ -7,6 +7,14 @@ const Navbar = () => {
     padding:30,
     justifyContent: "space-between"
   };
+  const ATag = styled.a`
+    font-size: 25px;
+    color: #000;
+    &:hover{
+        color:#8b00ff;
+        cursor: pointer;
+    }
+`;
   return (
     <div style={styles}>
       <Link href='/'>
@@ -24,10 +32,3 @@ const Navbar = () => {
 
 export default Navbar;
 
-const ATag = styled.a`
-    font-size: 25px;
-    color: #000;
-    &:hover{
-        color:#8b00ff;
-    }
-`;
