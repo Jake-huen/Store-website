@@ -15,11 +15,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   },[])
   return (
-    <Layout>
       <QueryClientProvider client={queryClient}>
         <Component {...pageProps} />
       </QueryClientProvider>
-    </Layout>
   )
 }
 

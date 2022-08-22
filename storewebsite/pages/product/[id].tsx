@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import {fetchProduct} from '../api/api';
+import Layout from "../../components/Layout";
 const Container = styled.div`
     justify-content: center;
     align-items: center;
@@ -53,6 +54,12 @@ interface IProduct{
     category:string;
     rating:IRate;
 }
+function addToCart(data:number){
+    let totalprice = Number(localStorage.getItem("price"));
+    console.log(data);
+    totalprice+=Number(data);
+    localStorage.setItem("price", totalprice.toString());
+}
 function Product(){
     const router = useRouter();
     const id = router.query['id'];
@@ -65,24 +72,26 @@ function Product(){
         return <div style={{fontSize:"30px"}}>An error occured</div>;
     }
     return (
-        <Container>
-            <Link href="/products">
-                <div style={{fontSize:30,margin:4,cursor:'pointer'}}>&larr; 이전</div>
-            </Link>
-            {useProduct && 
-                <Box>
-                    <Text>Category : {useProduct.data.category}</Text><br/>
-                    <Text>설명 : {useProduct.data.description}</Text><br/>
-                    <Text>가격 : {useProduct.data.price} 달러</Text><br/>
-                    <Text>평점 : {useProduct.data.rating.rate} 점</Text><br />
-                    <ProductImage src={useProduct.data.image} />
-                </Box>}
-            <Box>
-                <Link href="/cart">
-                    <button>카트에 담기</button>
+        <Layout>
+            <Container>
+                <Link href="/products">
+                    <div style={{fontSize:30,margin:4,cursor:'pointer'}}>&larr; 이전</div>
                 </Link>
-            </Box>
-        </Container>
+                {useProduct && 
+                    <Box>
+                        <Text>Category : {useProduct.data.category}</Text><br/>
+                        <Text>설명 : {useProduct.data.description}</Text><br/>
+                        <Text>가격 : {useProduct.data.price} 달러</Text><br/>
+                        <Text>평점 : {useProduct.data.rating.rate} 점</Text><br />
+                        <ProductImage src={useProduct.data.image} />
+                    </Box>}
+                <Box>
+                    <Link href="/cart">
+                        <button onClick={()=>addToCart(useProduct.data.price)}>카트에 담기</button>
+                    </Link>
+                </Box>
+            </Container>
+        </Layout>
     );
 }
 export default Product;

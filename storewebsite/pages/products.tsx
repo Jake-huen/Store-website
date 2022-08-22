@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import {useQuery} from '@tanstack/react-query';
 import Navbar from "../components/navbar";
 import {fetchAllCategories, fetchProducts} from './api/api';
+import Layout from "../components/Layout";
 
 interface IRate{
     rate:number;
@@ -83,13 +84,37 @@ const CartButton = styled.button`
         background-color: antiquewhite;
     }
 `
+const AddProducts = styled.button`
+    height: 40px;
+    background-color: aliceblue;
+    border:1px solid black;
+    border-radius:10px;
+    margin:10px;
+`
 
+// const addProducts = () =>{
+//     fetch('https://fakestoreapi.com/products',{
+//         method:"POST",
+//         body:JSON.stringify(
+//             {
+//                 title: 'test product',
+//                 price: 13.5,
+//                 description: 'lorem ipsum set',
+//                 image: 'https://i.pravatar.cc',
+//                 category: 'electronic'
+//             }
+//         )
+//     })
+//     .then(res=>res.json())
+//     .then(json=>console.log(json))
+//     console.log("clicked");
+// }
 function Products(){
     const {isLoading:productloading,data:productdata,isError:productError} = useQuery<IProducts[]>(['products'],fetchProducts);
     const {isLoading:categoryloading,data:categorydata,isError:categoryError} = useQuery(['category'],fetchAllCategories);
     const loading = productloading||categoryloading;
     const error = productError||categoryError;
-    const [buttonClicked,setButtonClicked] = useState('');
+    const [buttonClicked,setButtonClicked] = useState('electronics');
     const clickCategory = (index:any) =>{
         setButtonClicked(categorydata[index]);
     }
@@ -100,29 +125,30 @@ function Products(){
         return <div style={{fontSize:"30px"}}>An error occured</div>;
     }
     return (
-        <div>
+        <Layout>
             <CategoryList>
                 {Object.keys(categorydata).map(index=>(
-                    <Category onClick={()=>clickCategory(index)}>{categorydata[index]}</Category>
+                    <Category key={index} onClick={()=>clickCategory(index)}>{categorydata[index]}</Category>
                     ))}
             </CategoryList>
+            {/*<AddProducts onClick={addProducts}>상품 추가하기</AddProducts>*/}
             <ProductList>
                 {typeof productdata!='string' && productdata?.filter(product=>product.category===buttonClicked)
-                .map(product=>(
-                    <Product key={product.id}>
-                        <text>{product.category}</text><br />
-                        <text>정보 : {product.description}</text><br/>
-                        <text>가격 : {product.price} 달러</text><br/>
-                        <ProductImage src={product.image} />
-                        <Link href={{
-                            pathname:`/product/${product.id}`
-                        }}>
-                            <CartButton>상품 구매하러 가기</CartButton>
-                        </Link>
-                    </Product>
+                    .map(product=>(
+                        <Product key={product.id}>
+                            <text>{product.category}</text><br />
+                            <text>정보 : {product.description}</text><br/>
+                            <text>가격 : {product.price} 달러</text><br/>
+                            <ProductImage src={product.image} />
+                            <Link href={{
+                                pathname:`/product/${product.id}`
+                            }}>
+                                <CartButton>상품 구매하러 가기</CartButton>
+                            </Link>
+                        </Product>
                 ))}
             </ProductList>
-        </div>
+        </Layout>
     );
 }
 export default Products;

@@ -1,10 +1,11 @@
 import React from 'react';
+import Layout from '../components/Layout';
 
 const about = () => {
     return (
-        <div style={{fontSize:"30px"}}>
+        <Layout>
             부실기업
-        </div>
+        </Layout>
     );
 };
 

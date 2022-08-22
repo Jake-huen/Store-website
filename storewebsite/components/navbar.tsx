@@ -8,7 +8,7 @@ const Navbar = () => {
     justifyContent: "space-between"
   };
   const ATag = styled.a`
-    font-size: 25px;
+    font-size: 20px;
     color: #000;
     &:hover{
         color:#8b00ff;
@@ -20,8 +20,8 @@ const Navbar = () => {
       <Link href='/'>
         <ATag>메인화면</ATag>
       </Link>
-      <Link href='/about'>
-        <ATag>회사 소개</ATag>
+      <Link href='/cart'>
+        <ATag>구매목록</ATag>
       </Link>
       <Link href='/login'>
         <ATag>로그인</ATag>

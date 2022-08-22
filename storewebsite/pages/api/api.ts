@@ -15,3 +15,7 @@ export async function fetchAllCategories(){
 export async function fetchSpecificCategory(category:string){
     return fetch(`${BASE_URL}/products/category/${category}`).then((response)=>response.json());
 }
+
+export async function fetchAllCarts(){
+    return fetch(`${BASE_URL}/carts`).then((response)=>response.json());
+}
